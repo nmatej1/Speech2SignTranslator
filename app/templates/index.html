@@ -1,4 +1,53 @@
+
+
+<!DOCTYPE html>
+
+<!--CSS COMMANDS-->
+<style type="text/css">
+.col-centered{
+    float: none;
+    margin: 0 auto;
+}
+
+.sizer {
+  width: 75%;
+  margin: auto;
+}
+
+.video-mask{
+  width: 75%;
+  -webkit-mask-image: -webkit-radial-gradient(circle, white 100%, black 100%);
+  -webkit-transform: rotate(0.000001deg);
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: auto;
+}
+
+.subtitles{
+ width: 300px;
+ height: 300px;
+ border-color: blue;
+ font-size: 4em;
+ font-weight: bold;
+ font-family: Verdana, Arial, Helvetica, sans-serif;
+ margin: auto;
+}
+
+textarea {
+    outline: none !important;
+    border-color: white;
+    text-align: center;
+}
+
+.row {
+  padding-top: 30px;
+}
+</style>
+
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
@@ -114,12 +163,91 @@
 
     });
   </script>
+
+  <title>Bootstrap header</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="yourPath/silviomoreto-bootstrap-select-83d5a1b/dist/css/bootstrap-select.css">
+<link href="yourPath/bootstrap.min.css" rel="stylesheet">
 </head>
+
+<!--begin body-->
 <body>
-<video width="320" height="240" controls autoplay id="video">
-</video>
-<textarea id="subtitle" rows="4" cols="50">
-Starting text
-</textarea>
+
+<div class="jumbotron text-center">
+  <h1>Voice to Sign</h1>
+  <p>Making communication easier!</p>
+</div>
+
+<!--two columns with languages-->
+<div class="container">
+  <div class="row">
+    <div class="col-sm-6" align="center">
+      <h2>Input Language</h2>
+
+      <!--dropdown-->
+      <div class="btn-group">
+          <div class="dropdown">
+        	<button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Select a Language
+        	<span class="caret"></span></button>
+        	<ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+         		<li role="presentation"><a role="menuitem" href="#">English (US)</a></li>
+       	    </ul>
+      	  </div>
+      </div>
+
+    </div>
+
+    <div class="col-sm-6" align="center">
+      <h2>Output Language</h2>
+
+      <!--dropdown-->
+      <div class="btn-group">
+          <div class="dropdown">
+        	<button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Select a Language
+        	<span class="caret"></span></button>
+        	<ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+                <li class="dropdown-header"> Europe </li>
+              		<li role="presentation"><a role="menuitem" tabindex="-1" href="#">English (UK)</a></li>
+              		<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Slovak</a></li>
+
+                <li class="divider"></li>
+
+                <li class="dropdown-header"> North America </li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">English (US)</a></li>
+       	    </ul>
+      	  </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--microphone button/icon-->
+<div class="row text-center">
+	<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Circle-icons-mic.svg/2000px-Circle-icons-mic.svg.png" class="rounded mx-auto" width="100px">
+</div>
+
+<div class="row"></div>
+
+<!--video-->
+<div class="video-mask">
+  <div class="embed-responsive embed-responsive-16by9">
+    <video width="320" height="240" controls autoplay id="video"></video>
+  </div>
+</div>
+
+<div class="sizer">
+  <div class="subtitles">
+    <textarea id="subtitle">
+      Starting text
+    </textarea>
+  </div>
+</div>
+
+
 </body>
 </html>
