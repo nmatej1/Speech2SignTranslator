@@ -56,6 +56,10 @@ textarea {
       var to_play = [];
       var playing = false;
 
+      var play_future = [];
+      var play_past = [];
+      var play_now = "";
+
       var video = document.getElementById('video');
 
       var last_said;
@@ -86,7 +90,8 @@ textarea {
 
             if (to_play.length === 0 && !playing) {
               playing = true;
-              play_video(response, text);
+              play_future.push(text);
+              play_video(response);
             } else {
               to_play.push([text, response])
             }
@@ -96,7 +101,11 @@ textarea {
       }
 
       function play_video(source, text) {
-        play_subtitle(text);
+        play_past.push(play_now);
+        play_now = play_future.shift();
+        //play_future.push(text);
+        play_subtitle();
+
         var video_source = document.createElement('source');
 
         video.setAttribute('src', source);
@@ -111,9 +120,11 @@ textarea {
         }, 1500);
       }
 
-      function play_subtitle(text) {
-        console.log(text);
-        document.getElementById('subtitle').value = text;
+      function play_subtitle() {
+        console.log("Play_past: " + play_past);
+        console.log("Play_now: " + play_now);
+        console.log("Play_future: " + play_future);
+        document.getElementById('subtitle').value = play_now;
       }
 
       function play_another() {
@@ -121,7 +132,8 @@ textarea {
           playing = false;
         } else {
           var entry = to_play.shift();
-          play_video(entry[1], entry[0]);
+          play_future.push(entry[0]);
+          play_video(entry[1]);
         }
       }
 
@@ -242,9 +254,7 @@ textarea {
 
 <div class="sizer">
   <div class="subtitles">
-    <textarea id="subtitle">
-      Starting text
-    </textarea>
+    <textarea id="subtitle">Starting text</textarea>
   </div>
 </div>
 
