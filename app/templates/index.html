@@ -1,15 +1,60 @@
+<!DOCTYPE html>
+<!--CSS COMMANDS-->
+<style type="text/css">
+  .col-centered {
+    float: none;
+    margin: 0 auto;
+  }
+
+  .sizer {
+    width: 75%;
+    margin: auto;
+  }
+
+  .video-mask {
+    width: 75%;
+    -webkit-mask-image: -webkit-radial-gradient(circle, white 100%, black 100%);
+    -webkit-transform: rotate(0.000001deg);
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: auto;
+  }
+
+  .subtitles {
+    width: 300px;
+    height: 300px;
+    border-color: blue;
+    font-size: 4em;
+    font-weight: bold;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    margin: auto;
+  }
+
+  textarea {
+    outline: none !important;
+    border-color: white;
+    text-align: center;
+  }
+
+  .row {
+    padding-top: 30px;
+  }
+</style>
+
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
   <script>
     $('document').ready(function () {
       var to_play = [];
-      var playing = false;
-
-      var video = document.getElementById('video');
-
       var last_said;
+      var counter = 0;
+      var to_remove = -1;
+      var video_runner = false;
 
       function run_text(string) {
         if (string.length === 0) {
@@ -36,39 +81,57 @@
               return;
             }
 
-            if (to_play.length === 0 && !playing) {
-              playing = true;
-              play_video(response);
-            } else {
-              to_play.push([text, response])
-            }
+            to_play.push(counter);
+            create_video_element(counter, response);
+            counter += 1;
 
+            if (!video_runner) {
+              play_video();
+
+              video_runner = setInterval(function () {
+                if (to_play.length === 0) {
+                  clearInterval(video_runner);
+                  video_runner = false;
+                  return;
+                }
+
+                play_video();
+              }, 800)
+            }
           }
         })
       }
 
-      function play_video(source) {
-        var video_source = document.createElement('source');
+      function play_video() {
+        if (to_remove !== -1) {
+          document.getElementById(to_remove).remove();
+        }
 
-        video.setAttribute('src', source);
-
-        video.appendChild(video_source);
-        video.currentTime = 0.5;
-        video.playbackRate = 1.5;
-        video.play();
-
-        setTimeout(function () {
-          play_another()
-        }, 1500);
+        var entry = to_play.shift();
+        to_remove = entry;
+        console.log(entry);
+        element = document.getElementById(entry);
+        element.removeAttribute("hidden");
+        element.currentTime = 0.5;
+        element.playbackRate = 1.5;
+        element.play();
       }
 
-      function play_another() {
-        if (to_play.length === 0) {
-          playing = false;
-        } else {
-          var entry = to_play.shift();
-          play_video(entry[1]);
-        }
+      function create_video_element(id, url) {
+        var video = document.createElement('video');
+        var source = document.createElement('source');
+
+        video.setAttribute("width", 320);
+        video.setAttribute("height", 240);
+        video.setAttribute("id", id);
+        video.setAttribute('src', url);
+        video.setAttribute("hidden", true);
+
+        video.appendChild(source);
+        video.removeAttribute("controls");
+        video.load();
+
+        document.getElementById("body").appendChild(video);
       }
 
       var recognition = new webkitSpeechRecognition();
@@ -95,7 +158,7 @@
           clearTimeout(timer);
           timer = setTimeout(function () {
             run_text(remember);
-          }, 2000);
+          }, 1000);
 
           remember = event.results[1][0].transcript;
           previous = event.results[0][0].transcript;
@@ -109,9 +172,87 @@
 
     });
   </script>
+
+  <title>Bootstrap header</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
+
+<!--begin body-->
 <body>
-<video width="320" height="240" controls autoplay id="video">
-</video>
+
+<div class="jumbotron text-center">
+  <h1>Voice to Sign</h1>
+  <p>Making communication easier!</p>
+</div>
+
+<!--two columns with languages-->
+<div class="container">
+  <div class="row">
+    <div class="col-sm-6" align="center">
+      <h2>Input Language</h2>
+
+      <!--dropdown-->
+      <div class="btn-group">
+        <div class="dropdown">
+          <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Select a
+            Language
+            <span class="caret"></span></button>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+            <li role="presentation"><a role="menuitem" href="#">English (US)</a></li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-sm-6" align="center">
+      <h2>Output Language</h2>
+
+      <!--dropdown-->
+      <div class="btn-group">
+        <div class="dropdown">
+          <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Select a
+            Language
+            <span class="caret"></span></button>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+            <li class="dropdown-header"> Europe</li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">English (UK)</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Slovak</a></li>
+
+            <li class="divider"></li>
+
+            <li class="dropdown-header"> North America</li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">English (US)</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--microphone button/icon-->
+<div class="row text-center">
+  <img
+      src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Circle-icons-mic.svg/2000px-Circle-icons-mic.svg.png"
+      class="rounded mx-auto" width="100px">
+</div>
+
+<div class="row"></div>
+
+<!--video-->
+<div class="video-mask">
+  <div class="embed-responsive embed-responsive-16by9" id="body">
+  </div>
+</div>
+
+<div class="sizer">
+  <div class="subtitles">
+    <textarea id="subtitle">Starting text</textarea>
+  </div>
+</div>
 </body>
 </html>
