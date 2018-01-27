@@ -17,7 +17,6 @@
         }
 
         if (string !== last_said) {
-          console.log(string);
           last_said = string.replace(" ", "");
           var split = string.split(" ");
           for (var i = 0; i < split.length; i++) {
@@ -38,7 +37,7 @@
 
             if (to_play.length === 0 && !playing) {
               playing = true;
-              play_video(response);
+              play_video(response, text);
             } else {
               to_play.push([text, response])
             }
@@ -47,7 +46,8 @@
         })
       }
 
-      function play_video(source) {
+      function play_video(source, text) {
+        play_subtitle(text);
         var video_source = document.createElement('source');
 
         video.setAttribute('src', source);
@@ -62,12 +62,17 @@
         }, 1500);
       }
 
+      function play_subtitle(text) {
+        console.log(text);
+        document.getElementById('subtitle').value = text;
+      }
+
       function play_another() {
         if (to_play.length === 0) {
           playing = false;
         } else {
           var entry = to_play.shift();
-          play_video(entry[1]);
+          play_video(entry[1], entry[0]);
         }
       }
 
@@ -113,5 +118,8 @@
 <body>
 <video width="320" height="240" controls autoplay id="video">
 </video>
+<textarea id="subtitle" rows="4" cols="50">
+Starting text
+</textarea>
 </body>
 </html>
