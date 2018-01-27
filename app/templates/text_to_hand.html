@@ -1,0 +1,37 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+  <script>
+    $('document').ready(function () {
+      document.getElementById("send").addEventListener("click", function () {
+        update_video(document.getElementById('word').value)
+      });
+
+      function update_video(text) {
+        $.ajax({
+          url: '/api/',
+          data: {'word': text},
+          type: 'GET',
+          success: function (response) {
+            console.log(response);
+            var video = document.getElementById('video');
+            var source = document.createElement('source');
+
+            video.setAttribute('src', response);
+
+            video.appendChild(source);
+            video.play();
+          }
+        })
+      }
+    });
+  </script>
+</head>
+<body>
+<input id="word">
+<button type="button" id="send">Send</button>
+<video width="320" height="240" controls autoplay id="video">
+</video>
+</body>
+</html>
