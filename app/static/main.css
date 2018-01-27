@@ -1,0 +1,40 @@
+.col-centered {
+    float: none;
+    margin: 0 auto;
+}
+
+.sizer {
+    width: 75%;
+    margin: auto;
+}
+
+.video-mask {
+    width: 75%;
+    -webkit-mask-image: -webkit-radial-gradient(circle, white 100%, black 100%);
+    -webkit-transform: rotate(0.000001deg);
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: auto;
+}
+
+.subtitles {
+    width: 300px;
+    height: 300px;
+    border-color: blue;
+    font-size: 4em;
+    font-weight: bold;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    margin: auto;
+}
+
+textarea {
+    outline: none !important;
+    border-color: white;
+    text-align: center;
+}
+
+.row {
+    padding-top: 30px;
+}
