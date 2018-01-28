@@ -255,9 +255,11 @@
       document.getElementById('start_button').addEventListener('click', function(eventObj) {
         console.log("Got here, recognizing: " + recognizing);
         if(recognizing) {
+          document.getElementById('button_src').src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Circle-icons-mic.svg/2000px-Circle-icons-mic.svg.png';
           recognition.stop();
           recognizing = false;
         } else {
+          document.getElementById('button_src').src = 'https://vignette.wikia.nocookie.net/random-ness/images/6/6b/Random_Button.png';
           recognition.start();
           recognizing = true;
         }
@@ -345,7 +347,7 @@
 <!--microphone button/icon-->
 <div class="row text-center">
     <button id="start_button">
-  <img
+  <img id="button_src"
       src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Circle-icons-mic.svg/2000px-Circle-icons-mic.svg.png"
       class="rounded mx-auto" width="100px"></button>
 </div>
