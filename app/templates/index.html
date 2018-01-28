@@ -71,22 +71,21 @@
       var to_play = [];
       var past_play = [" "];
 
-      var last_said;
+      var last_said = '=';
       var counter = 0;
       var to_remove = -1;
       var video_runner = false;
       var remember = '';
       var timer;
       var to_remember = '';
-      var final_transcript = '';
-
+      var full_speech = '';
 
       function run_text(string) {
         if (string.length === 0) {
           return;
         }
 
-        if (string !== last_said) {
+        if (string.indexOf(last_said) === -1 && last_said.indexOf(string) === -1) {
           to_remember += ' ' + string;
 
           last_said = string.replace(" ", "");
@@ -138,9 +137,8 @@
 
         var entry = to_play.shift();
         to_remove = entry[0];
-        console.log("Entry is: " + entry[1]);
 
-        play_subtitle(entry[1], entry[2]);
+        play_subtitle(entry[1]);
         element = document.getElementById(entry[0]);
         element.removeAttribute("hidden");
         element.currentTime = 0.5;
@@ -148,14 +146,25 @@
         element.play();
       }
 
-      function play_subtitle(short_text, text) {
-        var past_len = past_play.length;
-        subtitles_past.innerHTML = linebreak(past_play.slice(Math.max(past_len - 5, 1)).join(' '));
-        past_play.push(short_text);
-        subtitles_now.innerHTML = linebreak(short_text);
-        var to_len = to_play.length;
-        console.log("to_play is now: " + to_play + ". Sliced: " + to_play.map(x => x[1]).join(' '));
-        final_future_span.innerHTML = linebreak(to_play.map(x => x[1]).slice(Math.max(to_len - 5, 1)).join(' '));
+      function play_subtitle(short_text) {
+        console.log(full_speech);
+        var result_split = full_speech.split(' ' + short_text + ' ');
+        console.log(result_split);
+
+        console.log();
+
+        if (full_speech.indexOf(short_text) === 0) {
+          subtitles_now.innerHTML = short_text;
+          final_future_span.innerHTML = result_split[0].substring(short_text.length + 1);
+        } else if (result_split.length > 1) {
+          subtitles_past.innerHTML = result_split[0];
+          subtitles_now.innerHTML = short_text;
+          final_future_span.innerHTML = result_split[1];
+        } else if(result_split.length === 1) {
+          subtitles_past.innerHTML = result_split[0].substring(0, result_split[0].length - short_text.length - 1);
+          subtitles_now.innerHTML = short_text;
+          final_future_span.innerHTML = '';
+        }
       }
 
       function play_another() {
@@ -197,33 +206,32 @@
       };
 
       recognition.onend = function (event) {
+        last_said = '=';
+        remember = '';
+        to_remember = '';
         recognition.start();
       };
 
       recognition.onresult = function (event) {
-        /*var interim_transcript = '';
+        var interim_transcript = '';
+        var final_transcript = '';
+
         for (var i = event.resultIndex; i < event.results.length; ++i) {
-            if (event.results[i].isFinal) {
-                final_transcript += event.results[i][0].transcript;
-            } else {
-                interim_transcript += event.results[i][0].transcript;
-            }
-        }
-        final_span.innerHTML = linebreak(final_transcript);
-        interim_span.innerHTML = linebreak(interim_transcript);
-        if (final_transcript || interim_transcript) {
-            showButtons('inline-block');
-        }*/
-
-
-        console.log(event.results.length);
-        if (event.results.length !== 1) {
-          console.log('Got in');
-          run_text(event.results[0][0].transcript.replace(previous, "").trim());
-
-          if (!event.results[1][0].transcript.substring(1, event.results[1][0].transcript.length).includes(" ") && event.results[1].isFinal) {
-            run_text(event.results[1][0].transcript);
+          if (event.results[i].isFinal) {
+            final_transcript += event.results[i][0].transcript;
+          } else {
+            interim_transcript += event.results[i][0].transcript;
           }
+        }
+
+        if (final_transcript.length > 0) {
+          full_speech = final_transcript;
+        } else {
+          full_speech = interim_transcript;
+        }
+
+        if (event.results.length !== 1 || event.results[0].isFinal) {
+          run_text(event.results[0][0].transcript.replace(previous, "").trim());
 
           clearTimeout(timer);
           timer = setTimeout(function () {
@@ -231,25 +239,36 @@
             recognition.stop();
           }, 1000);
 
-          remember = event.results[1][0].transcript;
+          if (event.results.length > 1) {
+            remember = event.results[1][0].transcript;
+
+            if (!event.results[1][0].transcript.trim().includes(" ") && event.results[1].isFinal) {
+              run_text(event.results[1][0].transcript);
+            }
+          }
+
           previous = event.results[0][0].transcript;
         }
       };
-      //run_text("Hello do you want to grab breakfast morning");
+
+//      run_text("Hello do you want to grab breakfast morning");
       recognition.start();
     });
 
     var current_style;
+
     function showButtons(style) {
-        if (style == current_style) {
-            return;
-        }
-        current_style = style;
+      if (style == current_style) {
+        return;
+      }
+      current_style = style;
     }
+
     var two_line = /\n\n/g;
     var one_line = /\n/g;
+
     function linebreak(s) {
-        return s.replace(two_line, '<p></p>').replace(one_line, '<br>');
+      return s.replace(two_line, '<p></p>').replace(one_line, '<br>');
     }
   </script>
 
@@ -277,12 +296,9 @@
       <!--dropdown-->
       <div class="btn-group">
         <div class="dropdown">
-          <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
-            Select a Language
-            <span class="caret"></span></button>
-          <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
-            <li role="presentation"><a role="menuitem" href="#">English (US)</a></li>
-          </ul>
+          <select class="selectpicker btn btn-default dropdown-toggle" id="input_language">
+            <option>English</option>
+          </select>
         </div>
       </div>
 
@@ -332,13 +348,14 @@
 <div class="row"></div>
 
 <div class="container">
-    <div id="results">
-        <span class="final" id="subtitles_past"></span>
-        <span style="color:blue;font-weight:bold;font-size:50px" id="subtitles_now">Set your language and spread the sign!</span>
-        <span id="final_future_span" class="final"></span>
-        <span id="interim_future_span" class="interim"></span>
-        <p>
-    </div>
+  <div id="results">
+    <span class="final" id="subtitles_past"></span>
+    <span style="color:blue;font-weight:bold;font-size:50px"
+          id="subtitles_now">Set your language and spread the sign!</span>
+    <span id="final_future_span" class="final"></span>
+    <span id="interim_future_span" class="interim"></span>
+    <p>
+  </div>
 </div>
 </body>
 </html>
