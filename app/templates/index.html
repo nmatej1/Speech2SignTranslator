@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <!--CSS COMMANDS-->
 <style type="text/css">
   #results {
@@ -63,10 +64,15 @@
 
 <html lang="en">
 
-<head>
-  <meta charset="UTF-8">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
-  <script>
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script>
     $('document').ready(function () {
       var to_play = [];
       var past_play = [" "];
@@ -80,7 +86,6 @@
       var to_remember = '';
       var full_speech = '';
       var recognizing = false;
-
 
       function run_text(string) {
         if (string.length === 0) {
@@ -162,20 +167,10 @@
           subtitles_past.innerHTML = result_split[0];
           subtitles_now.innerHTML = short_text;
           final_future_span.innerHTML = result_split[1];
-        } else if(result_split.length === 1) {
+        } else if (result_split.length === 1) {
           subtitles_past.innerHTML = result_split[0].substring(0, result_split[0].length - short_text.length - 1);
           subtitles_now.innerHTML = short_text;
           final_future_span.innerHTML = '';
-        }
-      }
-
-      function play_another() {
-        if (to_play.length === 0) {
-          playing = false;
-        } else {
-          var entry = to_play.shift();
-          play_future.push(entry[0]);
-          play_video(entry[1]);
         }
       }
 
@@ -211,7 +206,10 @@
         last_said = '=';
         remember = '';
         to_remember = '';
-        recognizing = false;
+
+        if (recognizing) {
+          recognition.start();
+        }
       };
 
       recognition.onresult = function (event) {
@@ -238,6 +236,7 @@
           clearTimeout(timer);
           timer = setTimeout(function () {
             run_text(remember);
+            recognition.stop();
           }, 1000);
 
           if (event.results.length > 1) {
@@ -252,14 +251,14 @@
         }
       };
 
-      document.getElementById('start_button').addEventListener('click', function(eventObj) {
+      document.getElementById('start_button').addEventListener('click', function (eventObj) {
         console.log("Got here, recognizing: " + recognizing);
-        if(recognizing) {
+        if (recognizing) {
           document.getElementById('button_src').src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Circle-icons-mic.svg/2000px-Circle-icons-mic.svg.png';
           recognition.stop();
           recognizing = false;
         } else {
-          document.getElementById('button_src').src = 'https://vignette.wikia.nocookie.net/random-ness/images/6/6b/Random_Button.png';
+          document.getElementById('button_src').src = 'https://image.ibb.co/gEszyb/final_mic_crossed.png';
           recognition.start();
           recognizing = true;
         }
@@ -281,97 +280,146 @@
     var one_line = /\n/g;
 
 
-
     function linebreak(s) {
       return s.replace(two_line, '<p></p>').replace(one_line, '<br>');
     }
   </script>
 
-  <title>Bootstrap header</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</head>
-<!--begin body-->
-<body>
+    <title>Voice to Sign Converter</title>
 
-<div class="jumbotron text-center">
-  <h1>Voice to Sign</h1>
-  <p>Making communication easier!</p>
-</div>
+    <!-- Bootstrap core CSS -->
+    <link href="static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
-<!--two columns with languages-->
-<div class="container">
-  <div class="row">
-    <div class="col-sm-6" align="center">
-      <h2>Input Language</h2>
+    <!-- Custom styles for this template -->
+    <style>
+      body {
+        padding-top: 20px;
+      }
+      @media (min-width: 992px) {
+        body {
+          padding-top: 20px;
+        }
+      }
 
-      <!--dropdown-->
-      <div class="btn-group">
-        <div class="dropdown">
-          <select class="selectpicker btn btn-default dropdown-toggle" id="input_language">
-            <option>English</option>
-          </select>
+    </style>
+
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" style="margin-left: -15%" href="#">IC Hack 18</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#"></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#"></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#"></a>
+            </li>
+          </ul>
         </div>
       </div>
+    </nav>
 
-    </div>
-
-    <div class="col-sm-6" align="center">
-      <h2>Output Language</h2>
-
-      <!--dropdown-->
-      <div class="btn-group">
-        <div class="dropdown">
-          <select class="selectpicker btn btn-default dropdown-toggle" id="output_language">
-            <option>American English</option>
-            <option>English</option>
-            <option>Swedish</option>
-            <option>Czech</option>
-            <option>Spanish</option>
-            <option>Portuguese</option>
-            <option>German</option>
-            <option>French</option>
-            <option>Turkish</option>
-            <option>Polish</option>
-            <option>Icelandic</option>
-          </select>
+    <!-- Page Content -->
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12 text-center">
+          <h1 class="mt-5">Voice to Sign</h1>
+          <p class="lead">Making communication easier!</p>
         </div>
       </div>
     </div>
-  </div>
-</div>
 
-<!--microphone button/icon-->
+    <!-- Bootstrap core JavaScript -->
+    <script src="static/jquery/jquery.min.js"></script>
+    <script src="static/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!--two columns with languages-->
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6" align="center">
+          <h2>Input Language</h2>
+
+          <!--dropdown-->
+          <div class="btn-group">
+            <div class="dropdown">
+              <select class="selectpicker btn btn-default dropdown-toggle" id="input_language">
+                  <option>English</option>
+              </select>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-sm-6" align="center">
+          <h2>Output Language</h2>
+
+          <!--dropdown-->
+          <div class="btn-group">
+            <div class="dropdown">
+              <select class="selectpicker btn btn-default dropdown-toggle" id="output_language">
+                <option>American English</option>
+                <option>English</option>
+                <option>Swedish</option>
+                <option>Czech</option>
+                <option>Spanish</option>
+                <option>Portuguese</option>
+                <option>German</option>
+                <option>French</option>
+                <option>Turkish</option>
+                <option>Polish</option>
+                <option>Icelandic</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--microphone button-->
+    <!--microphone button/icon-->
 <div class="row text-center">
-    <button id="start_button">
-  <img id="button_src"
-      src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Circle-icons-mic.svg/2000px-Circle-icons-mic.svg.png"
-      class="rounded mx-auto" width="100px"></button>
+  <button id="start_button" style="margin:auto">
+    <img id="button_src"
+         src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Circle-icons-mic.svg/2000px-Circle-icons-mic.svg.png"
+         class="rounded mx-auto" width="100px"></button>
 </div>
 
-<div class="row"></div>
+    <!--video-->
+    <div class="video-mask col-sm-4 col-sm-offset-4">
+      <div class="embed-responsive embed-responsive-16by9" id="body">
+        <!-- <video width="320" height="240" controls autoplay id="video"></video> -->
+      </div>
+    </div>
 
-<!--video-->
-<div class="video-mask col-sm-4 col-sm-offset-4">
-  <div class="embed-responsive embed-responsive-16by9" id="body">
-    <!-- <video width="320" height="240" controls autoplay id="video"></video> -->
-  </div>
-</div>
+    <div class="row"></div>
 
-<div class="row"></div>
-
-<div class="container">
-  <div id="results">
+    <div class="container">
+        <div id="results">
     <span class="final" id="subtitles_past"></span>
     <span style="color:blue;font-weight:bold;font-size:50px"
-          id="subtitles_now">Set your language and spread the sign!</span>
-    <span id="final_future_span" class="final"></span>
+          id="subtitles_now"></span>
+    <span id="final_future_span" class="final">Set your language and spread the sign!</span>
     <span id="interim_future_span" class="interim"></span>
     <p>
   </div>
 </div>
-</body>
+
+  </body>
+
 </html>
