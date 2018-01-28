@@ -149,11 +149,13 @@
       }
 
       function play_subtitle(short_text, text) {
-        var past_len = subtitles_past.length;
+        var past_len = past_play.length;
         subtitles_past.innerHTML = linebreak(past_play.slice(Math.max(past_len - 5, 1)).join(' '));
-        past_play.push(text);
+        past_play.push(short_text);
         subtitles_now.innerHTML = linebreak(short_text);
-        final_future_span.innerHTML = linebreak(to_play.map(x => x[2]).join(' '));
+        var to_len = to_play.length;
+        console.log("to_play is now: " + to_play + ". Sliced: " + to_play.map(x => x[1]).join(' '));
+        final_future_span.innerHTML = linebreak(to_play.map(x => x[1]).slice(Math.max(to_len - 5, 1)).join(' '));
       }
 
       function play_another() {
@@ -233,7 +235,7 @@
           previous = event.results[0][0].transcript;
         }
       };
-//      run_text("Hi how are you doing");
+      run_text("Hello do you want to grab breakfast morning");
       recognition.start();
     });
 
