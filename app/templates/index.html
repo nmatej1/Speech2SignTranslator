@@ -46,9 +46,9 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
-    <script>
+  <meta charset="UTF-8">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+  <script>
     $('document').ready(function () {
       var to_play = [];
       var past_play = [" "];
@@ -126,7 +126,7 @@
         document.getElementById('subtitle_past').value = past_play.slice(0, 5).join(' ');
         past_play.push(text);
         document.getElementById('subtitle_now').value = text;
-        document.getElementById('subtitle_future').value = to_play.slice(0,5).map(x => x[1]);
+        document.getElementById('subtitle_future').value = to_play.slice(0, 5).map(x => x[1]);
       }
 
       function play_another() {
@@ -166,7 +166,7 @@
         console.log(event.error);
       };
 
-      run_text("fish man how is it going man");
+      run_text("Hi how are you doing");
 
       recognition.onresult = function (event) {
         if (event.results.length !== 1) {
@@ -187,87 +187,73 @@
       };
       <!--recognition.start();-->
     });
+  </script>
 
-    </script>
-    <script>
-    $('document').ready(function () {
-
-    });
-
-    </script>
-
-    <title>Bootstrap header</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-    <link rel="stylesheet" type="text/css"
-          href="yourPath/silviomoreto-bootstrap-select-83d5a1b/dist/css/bootstrap-select.css">
-    <link href="yourPath/bootstrap.min.css" rel="stylesheet">
-
+  <title>Bootstrap header</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
-
 <!--begin body-->
 <body>
 
 <div class="jumbotron text-center">
-    <h1>Voice to Sign</h1>
-    <p>Making communication easier!</p>
+  <h1>Voice to Sign</h1>
+  <p>Making communication easier!</p>
 </div>
 
 <!--two columns with languages-->
 <div class="container">
-    <div class="row">
-        <div class="col-sm-6" align="center">
-            <h2>Input Language</h2>
+  <div class="row">
+    <div class="col-sm-6" align="center">
+      <h2>Input Language</h2>
 
-            <!--dropdown-->
-            <div class="btn-group">
-                <div class="dropdown">
-                    <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
-                        Select a
-                        Language
-                        <span class="caret"></span></button>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
-                        <li role="presentation"><a role="menuitem" href="#">English (US)</a></li>
-                    </ul>
-                </div>
-            </div>
-
+      <!--dropdown-->
+      <div class="btn-group">
+        <div class="dropdown">
+          <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
+            Select a Language
+            <span class="caret"></span></button>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+            <li role="presentation"><a role="menuitem" href="#">English (US)</a></li>
+          </ul>
         </div>
+      </div>
 
-        <div class="col-sm-6" align="center">
-            <h2>Output Language</h2>
-
-            <!--dropdown-->
-            <div class="btn-group">
-                <div class="dropdown">
-                    <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
-                        Select a
-                        Language
-                        <span class="caret"></span></button>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
-                        <li class="dropdown-header"> Europe</li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">English (UK)</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Slovak</a></li>
-
-                        <li class="divider"></li>
-
-                        <li class="dropdown-header"> North America</li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">English (US)</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
     </div>
+
+    <div class="col-sm-6" align="center">
+      <h2>Output Language</h2>
+
+      <!--dropdown-->
+      <div class="btn-group">
+        <div class="dropdown">
+          <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
+            Select a Language
+            <span class="caret"></span></button>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+            <li class="dropdown-header"> Europe</li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">English (UK)</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Slovak</a></li>
+
+            <li class="divider"></li>
+
+            <li class="dropdown-header"> North America</li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">English (US)</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!--microphone button/icon-->
 <div class="row text-center">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Circle-icons-mic.svg/2000px-Circle-icons-mic.svg.png"
-         class="rounded mx-auto" width="100px">
+  <img
+      src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Circle-icons-mic.svg/2000px-Circle-icons-mic.svg.png"
+      class="rounded mx-auto" width="100px">
 </div>
 
 <div class="row"></div>
@@ -275,36 +261,32 @@
 <!--video-->
 <div class="video-mask">
 
-    <div class="embed-responsive embed-responsive-16by9" id="body">
-        <!-- <video width="320" height="240" controls autoplay id="video"></video> -->
-    </div>
+  <div class="embed-responsive embed-responsive-16by9" id="body">
+    <!-- <video width="320" height="240" controls autoplay id="video"></video> -->
+  </div>
 </div>
 
 <div class="container">
-    <div class="col-sm-4" align="right">
-        <div class="subtitles">
-            <textarea id="subtitle_past" style="width:109%; text-align:right;">
-Starting text
-            </textarea>
-        </div>
+  <div class="col-sm-4" align="right">
+    <div class="subtitles">
+      <textarea id="subtitle_past" style="width:109%; text-align:right;"> Starting text
+      </textarea>
     </div>
+  </div>
 
-    <div class="col-sm-4" align="center">
-        <div class="subtitles">
-            <textarea id="subtitle_now" style="width:109%; text-align:center; color:red;">
-Starting text
-            </textarea>
-        </div>
+  <div class="col-sm-4" align="center">
+    <div class="subtitles">
+      <textarea id="subtitle_now" style="width:109%; text-align:center; color:red;">Starting text
+      </textarea>
     </div>
+  </div>
 
-    <div class="col-sm-4" align="left">
-        <div class="subtitles">
-            <textarea id="subtitle_future" style="width:109%; text-align:left;">
-Starting text
+  <div class="col-sm-4" align="left">
+    <div class="subtitles">
+            <textarea id="subtitle_future" style="width:109%; text-align:left;">Starting text
             </textarea>
-        </div>
     </div>
+  </div>
 </div>
-
 </body>
 </html>
