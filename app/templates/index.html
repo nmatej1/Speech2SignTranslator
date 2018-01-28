@@ -53,7 +53,7 @@
       var to_play = [];
       var past_play = [" "];
 
-      var last_said;
+      var last_said = '=';
       var counter = 0;
       var to_remove = -1;
       var video_runner = false;
@@ -66,7 +66,7 @@
           return;
         }
 
-        if (string !== last_said) {
+        if (string.indexOf(last_said) === -1 && last_said.indexOf(string) === -1) {
           to_remember += ' ' + string;
 
           last_said = string.replace(" ", "");
@@ -118,7 +118,6 @@
 
         var entry = to_play.shift();
         to_remove = entry[0];
-        console.log("Entry is: " + entry[1]);
 
         play_subtitle(entry[1], entry[2]);
         element = document.getElementById(entry[0]);
@@ -174,18 +173,15 @@
       };
 
       recognition.onend = function (event) {
+        last_said = '=';
+        remember = '';
+        to_remember = '';
         recognition.start();
       };
 
       recognition.onresult = function (event) {
-        console.log(event.results.length);
-        if (event.results.length !== 1) {
-          console.log('Got in');
+        if (event.results.length !== 1 || event.results[0].isFinal) {
           run_text(event.results[0][0].transcript.replace(previous, "").trim());
-
-          if (!event.results[1][0].transcript.substring(1, event.results[1][0].transcript.length).includes(" ") && event.results[1].isFinal) {
-            run_text(event.results[1][0].transcript);
-          }
 
           clearTimeout(timer);
           timer = setTimeout(function () {
@@ -193,7 +189,14 @@
             recognition.stop();
           }, 1000);
 
-          remember = event.results[1][0].transcript;
+          if (event.results.length > 1) {
+            remember = event.results[1][0].transcript;
+
+            if (!event.results[1][0].transcript.trim().includes(" ") && event.results[1].isFinal) {
+              run_text(event.results[1][0].transcript);
+            }
+          }
+
           previous = event.results[0][0].transcript;
         }
       };
@@ -226,12 +229,9 @@
       <!--dropdown-->
       <div class="btn-group">
         <div class="dropdown">
-          <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
-            Select a Language
-            <span class="caret"></span></button>
-          <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
-            <li role="presentation"><a role="menuitem" href="#">English (US)</a></li>
-          </ul>
+          <select class="selectpicker btn btn-default dropdown-toggle" id="input_language">
+            <option>English</option>
+          </select>
         </div>
       </div>
 

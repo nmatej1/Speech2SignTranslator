@@ -1,7 +1,9 @@
 import re
 
+import nltk
 import requests
 from flask import Flask, render_template, request
+from nltk.stem.snowball import EnglishStemmer
 
 app = Flask(__name__)
 
@@ -13,7 +15,7 @@ def index():
 
 @app.route("/api/")
 def text_to_sign():
-    words = [request.args.get("word").lower(), request.args.get("word").lower().replace("ing", "")]
+    words = [request.args.get("word").lower(), EnglishStemmer().stem(request.args.get("word").lower())]
     language = request.args.get("language")
 
     for word in words:
@@ -29,4 +31,5 @@ def text_to_sign():
 
 if __name__ == "__main__":
     # Only for debugging while developing
+    # nltk.download('all')
     app.run(debug=True, port=5000)
