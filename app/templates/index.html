@@ -79,6 +79,8 @@
       var timer;
       var to_remember = '';
       var full_speech = '';
+      var recognizing = false;
+
 
       function run_text(string) {
         if (string.length === 0) {
@@ -209,7 +211,7 @@
         last_said = '=';
         remember = '';
         to_remember = '';
-        recognition.start();
+        recognizing = false;
       };
 
       recognition.onresult = function (event) {
@@ -236,7 +238,6 @@
           clearTimeout(timer);
           timer = setTimeout(function () {
             run_text(remember);
-            recognition.stop();
           }, 1000);
 
           if (event.results.length > 1) {
@@ -251,8 +252,18 @@
         }
       };
 
-//      run_text("Hello do you want to grab breakfast morning");
-      recognition.start();
+      document.getElementById('start_button').addEventListener('click', function(eventObj) {
+        console.log("Got here, recognizing: " + recognizing);
+        if(recognizing) {
+          recognition.stop();
+          recognizing = false;
+        } else {
+          recognition.start();
+          recognizing = true;
+        }
+      });
+
+      //run_text("Hello do you want to grab breakfast morning");
     });
 
     var current_style;
@@ -266,6 +277,8 @@
 
     var two_line = /\n\n/g;
     var one_line = /\n/g;
+
+
 
     function linebreak(s) {
       return s.replace(two_line, '<p></p>').replace(one_line, '<br>');
@@ -330,11 +343,12 @@
 </div>
 
 <!--microphone button/icon-->
-<!--<div class="row text-center">
+<div class="row text-center">
+    <button id="start_button">
   <img
       src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Circle-icons-mic.svg/2000px-Circle-icons-mic.svg.png"
-      class="rounded mx-auto" width="100px">
-</div>-->
+      class="rounded mx-auto" width="100px"></button>
+</div>
 
 <div class="row"></div>
 
