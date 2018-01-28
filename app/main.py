@@ -13,16 +13,18 @@ def index():
 
 @app.route("/api/")
 def text_to_sign():
-    word = request.args.get("word")
-    # word = "hello"
+    words = [request.args.get("word").lower(), request.args.get("word").lower().replace("ing", "")]
+    language = request.args.get("language")
 
-    result = requests.post('http://spreadthesign.com/includes/search.inc.php', data={'search': word, 'lang': 13})
-    match = re.search('a href="\/us\/(\d+)\/{}-american-english"'.format(word), result.content.decode("utf-8"))
+    for word in words:
+        result = requests.post('http://spreadthesign.com/includes/search.inc.php', data={'search': word, 'lang': 13})
+        matches = re.finditer('<a href=\"\/us\/(\d+)\/{}(?:-[^-]*)?-american-english(?:.*)\" .* data-video-language=\"(\d+)\" data-video-id=\"\d+\"'.format(word), result.content.decode("utf-8"))
 
-    if match:
-        return 'https://media.spreadthesign.com/video/mp4/13/{}.mp4'.format(match.group(1))
-    else:
-        return ''
+        for match in matches:
+            if 'title="{}"'.format(language) in match.group(0):
+                return 'https://media.spreadthesign.com/video/mp4/{}/{}.mp4'.format(match.group(2), match.group(1))
+
+    return ''
 
 
 if __name__ == "__main__":

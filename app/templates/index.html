@@ -26,7 +26,7 @@
     width: 300px;
     height: 300px;
     border-color: blue;
-    font-size: 3em;
+    font-size: 1em;
     font-weight: bold;
     font-family: Verdana, Arial, Helvetica, sans-serif;
     margin: auto;
@@ -59,6 +59,7 @@
       var video_runner = false;
       var remember = '';
       var timer;
+      var to_remember = '';
 
       function run_text(string) {
         if (string.length === 0) {
@@ -66,6 +67,8 @@
         }
 
         if (string !== last_said) {
+          to_remember += ' ' + string;
+
           last_said = string.replace(" ", "");
           var split = string.split(" ");
           for (var i = 0; i < split.length; i++) {
@@ -75,16 +78,19 @@
       }
 
       function update_video(text) {
+        var language = document.getElementById("output_language").value;
+
         $.ajax({
           url: '/api/',
-          data: {'word': text},
+          data: {'word': text, 'language': language},
           type: 'GET',
           success: function (response) {
             if (response.length === 0) {
               return;
             }
 
-            to_play.push([counter, text]);
+            to_play.push([counter, text, to_remember.trim()]);
+            to_remember = '';
             create_video_element(counter, response);
             counter += 1;
 
@@ -98,7 +104,7 @@
                   return;
                 }
                 play_video();
-              }, 800)
+              }, 1000)
             }
           }
         })
@@ -114,7 +120,7 @@
         to_remove = entry[0];
         console.log("Entry is: " + entry[1]);
 
-        play_subtitle(entry[1]);
+        play_subtitle(entry[1], entry[2]);
         element = document.getElementById(entry[0]);
         element.removeAttribute("hidden");
         element.currentTime = 0.5;
@@ -122,11 +128,11 @@
         element.play();
       }
 
-      function play_subtitle(text) {
-        document.getElementById('subtitle_past').value = past_play.slice(0, 5).join(' ');
+      function play_subtitle(short_text, text) {
+        document.getElementById('subtitle_past').value = past_play.join(' ');
         past_play.push(text);
-        document.getElementById('subtitle_now').value = text;
-        document.getElementById('subtitle_future').value = to_play.slice(0, 5).map(x => x[1]);
+        document.getElementById('subtitle_now').value = short_text;
+        document.getElementById('subtitle_future').value = to_play.map(x => x[2]).join(' ');
       }
 
       function play_another() {
@@ -159,6 +165,7 @@
       var recognition = new webkitSpeechRecognition();
       recognition.continuous = true;
       recognition.interimResults = true;
+      recognition.lang = "en-US";
 
       var previous = "";
 
@@ -166,10 +173,14 @@
         console.log(event.error);
       };
 
-      run_text("Hi how are you doing");
+      recognition.onstop = function (event) {
+        recognition.start();
+      };
 
       recognition.onresult = function (event) {
+        console.log(event.results.length);
         if (event.results.length !== 1) {
+          console.log('Got in');
           run_text(event.results[0][0].transcript.replace(previous, "").trim());
 
           if (!event.results[1][0].transcript.substring(1, event.results[1][0].transcript.length).includes(" ") && event.results[1].isFinal) {
@@ -179,13 +190,15 @@
           clearTimeout(timer);
           timer = setTimeout(function () {
             run_text(remember);
+            recognition.stop();
           }, 1000);
 
           remember = event.results[1][0].transcript;
           previous = event.results[0][0].transcript;
         }
       };
-      <!--recognition.start();-->
+//      run_text("Hi how are you doing");
+      recognition.start();
     });
   </script>
 
@@ -230,19 +243,19 @@
       <!--dropdown-->
       <div class="btn-group">
         <div class="dropdown">
-          <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
-            Select a Language
-            <span class="caret"></span></button>
-          <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
-            <li class="dropdown-header"> Europe</li>
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">English (UK)</a></li>
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Slovak</a></li>
-
-            <li class="divider"></li>
-
-            <li class="dropdown-header"> North America</li>
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">English (US)</a></li>
-          </ul>
+          <select class="selectpicker btn btn-default dropdown-toggle" id="output_language">
+            <option>American English</option>
+            <option>English</option>
+            <option>Swedish</option>
+            <option>Czech</option>
+            <option>Spanish</option>
+            <option>Portuguese</option>
+            <option>German</option>
+            <option>French</option>
+            <option>Turkish</option>
+            <option>Polish</option>
+            <option>Icelandic</option>
+          </select>
         </div>
       </div>
     </div>
@@ -250,17 +263,16 @@
 </div>
 
 <!--microphone button/icon-->
-<div class="row text-center">
+<!--<div class="row text-center">
   <img
       src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Circle-icons-mic.svg/2000px-Circle-icons-mic.svg.png"
       class="rounded mx-auto" width="100px">
-</div>
+</div>-->
 
 <div class="row"></div>
 
 <!--video-->
-<div class="video-mask">
-
+<div class="video-mask col-sm-4 col-sm-offset-4">
   <div class="embed-responsive embed-responsive-16by9" id="body">
     <!-- <video width="320" height="240" controls autoplay id="video"></video> -->
   </div>
