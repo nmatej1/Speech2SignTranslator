@@ -173,7 +173,7 @@
         console.log(event.error);
       };
 
-      recognition.onstop = function (event) {
+      recognition.onend = function (event) {
         recognition.start();
       };
 
