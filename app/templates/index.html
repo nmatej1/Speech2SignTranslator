@@ -1,6 +1,24 @@
 <!DOCTYPE html>
 <!--CSS COMMANDS-->
 <style type="text/css">
+  #results {
+    font-size: 30px;
+    font-weight: bold;
+    border: 0px;
+    padding: 15px;
+    text-align: center;
+    min-height: 150px;
+  }
+
+  .final {
+    color: black;
+    padding-right: 3px;
+  }
+
+  .interim {
+    color: gray;
+  }
+
   .col-centered {
     float: none;
     margin: 0 auto;
@@ -60,6 +78,8 @@
       var remember = '';
       var timer;
       var to_remember = '';
+      var final_transcript = '';
+
 
       function run_text(string) {
         if (string.length === 0) {
@@ -129,10 +149,11 @@
       }
 
       function play_subtitle(short_text, text) {
-        document.getElementById('subtitle_past').value = past_play.join(' ');
+        var past_len = subtitles_past.length;
+        subtitles_past.innerHTML = linebreak(past_play.slice(Math.max(past_len - 5, 1)).join(' '));
         past_play.push(text);
-        document.getElementById('subtitle_now').value = short_text;
-        document.getElementById('subtitle_future').value = to_play.map(x => x[2]).join(' ');
+        subtitles_now.innerHTML = linebreak(short_text);
+        final_future_span.innerHTML = linebreak(to_play.map(x => x[2]).join(' '));
       }
 
       function play_another() {
@@ -178,6 +199,21 @@
       };
 
       recognition.onresult = function (event) {
+        /*var interim_transcript = '';
+        for (var i = event.resultIndex; i < event.results.length; ++i) {
+            if (event.results[i].isFinal) {
+                final_transcript += event.results[i][0].transcript;
+            } else {
+                interim_transcript += event.results[i][0].transcript;
+            }
+        }
+        final_span.innerHTML = linebreak(final_transcript);
+        interim_span.innerHTML = linebreak(interim_transcript);
+        if (final_transcript || interim_transcript) {
+            showButtons('inline-block');
+        }*/
+
+
         console.log(event.results.length);
         if (event.results.length !== 1) {
           console.log('Got in');
@@ -200,6 +236,19 @@
 //      run_text("Hi how are you doing");
       recognition.start();
     });
+
+    var current_style;
+    function showButtons(style) {
+        if (style == current_style) {
+            return;
+        }
+        current_style = style;
+    }
+    var two_line = /\n\n/g;
+    var one_line = /\n/g;
+    function linebreak(s) {
+        return s.replace(two_line, '<p></p>').replace(one_line, '<br>');
+    }
   </script>
 
   <title>Bootstrap header</title>
@@ -278,27 +327,16 @@
   </div>
 </div>
 
+<div class="row"></div>
+
 <div class="container">
-  <div class="col-sm-4" align="right">
-    <div class="subtitles">
-      <textarea id="subtitle_past" style="width:109%; text-align:right;"> Starting text
-      </textarea>
+    <div id="results">
+        <span class="final" id="subtitles_past"></span>
+        <span style="color:blue;font-weight:bold;font-size:50px" id="subtitles_now">Set your language and spread the sign!</span>
+        <span id="final_future_span" class="final"></span>
+        <span id="interim_future_span" class="interim"></span>
+        <p>
     </div>
-  </div>
-
-  <div class="col-sm-4" align="center">
-    <div class="subtitles">
-      <textarea id="subtitle_now" style="width:109%; text-align:center; color:red;">Starting text
-      </textarea>
-    </div>
-  </div>
-
-  <div class="col-sm-4" align="left">
-    <div class="subtitles">
-            <textarea id="subtitle_future" style="width:109%; text-align:left;">Starting text
-            </textarea>
-    </div>
-  </div>
 </div>
 </body>
 </html>
